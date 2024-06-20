@@ -6,12 +6,14 @@ import BlogPost from "../../components/BlogPost.astro";
 export async function getStaticPaths() {
   const allPosts = await Astro.glob("../posts/*.md");
 
+  console.log("melnard");
+
   // create an array of tags from markdown file.
   const uniqueTags = [
     ...new Set(allPosts.map((post) => post.frontmatter.tags).flat()),
   ];
 
-  return uniqueTags.map((tag) => {
+  const arrObs = uniqueTags.map((tag) => {
     const filteredPosts = allPosts.filter((post) =>
       post.frontmatter.tags.includes(tag)
     );
@@ -20,9 +22,18 @@ export async function getStaticPaths() {
       props: { posts: filteredPosts },
     };
   });
+  console.log(arrObs);
+  arrObs.forEach((element) => {
+    console.log(element.props);
+
+    element.props.posts.forEach((el) => {
+      console.log(el.url);
+    });
+  });
+  return arrObs;
 }
 
-const { tag } = Astro.params; // value from the params of the current page
+const { tag } = Astro.params; // params are encoded to URL
 const { posts } = Astro.props;
 ---
 
